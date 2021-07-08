@@ -1,0 +1,59 @@
+server
+{
+    listen 443 ssl;
+    server_name your_site_name;
+    index index.php index.html index.htm default.php default.htm default.html;
+    root /www/your_site_name;
+
+    #已上传的证书文件的名称。
+    ssl_certificate /ssl/your_site_name/your_site_name_bundle.crt;
+    #已上传的证书密钥文件的名称。
+    ssl_certificate_key /ssl/your_site_name/your_site_name.key;
+    ssl_session_timeout 5m;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    #表示使用的加密套件的类型。
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2; #表示使用的TLS协议的类型。
+    ssl_prefer_server_ciphers on;
+
+    location ~ \.php$ {
+        root /www/your_site_name;
+        include fastcgi_params;
+        fastcgi_pass php:9000;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    rewrite /wp-admin$ $scheme://$host$uri/ permanent;
+
+    location ~ ^/(\.user.ini|\.htaccess|\.git|\.svn|\.project|LICENSE|README.md)
+    {
+        return 404;
+    }
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+    {
+        expires      30d;
+        error_log off;
+        access_log /dev/null;
+    }
+
+    location ~ .*\.(js|css)?$
+    {
+        expires      12h;
+        error_log off;
+        access_log /dev/null;
+    }
+
+    access_log  /var/log/nginx/your_site_name.log;
+    error_log  /var/log/nginx/your_site_name.error.log;
+}
+
+server {
+    listen 80;
+    server_name your_site_name;
+    rewrite ^(.*)$ https://$host$1 permanent;
+}
