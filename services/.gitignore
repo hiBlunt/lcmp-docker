@@ -1,4 +1,0 @@
-caddy/conf/*
-caddy/data/*
-caddy/etc/caddy/*
-!caddy/etc/caddy/Caddyfile.sample
