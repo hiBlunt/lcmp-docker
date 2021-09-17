@@ -1,0 +1,10 @@
+# 如果不显示指定http，caddy会自动申请并重定向到https
+http://your-domain.com {
+	root * /srv/your-web-path
+	encode gzip
+        # 在php_fastcgi前必须添加file_server
+        # 否则caddy把静态文件交给php-fpm处理，
+        # 导致静态文件全都无法加载
+        file_server
+	php_fastcgi php:9000
+}
