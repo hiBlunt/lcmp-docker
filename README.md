@@ -13,3 +13,5 @@
 ## 注意事项：
 1. www下文件权限为644，文件夹权限为755.请勿使用777，这会带来安全风险
 2. 安装完成后删除typecho源代码中的install.php, install文件夹
+3. 因为services/mysql/mysql.cnf下的client，mysqld，mysql三项编码已经设为utf8emb4，
+   在创建数据库时，输入create database your_bd即可，无需重复设置编码。
